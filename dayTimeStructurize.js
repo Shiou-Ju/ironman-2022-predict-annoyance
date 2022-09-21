@@ -148,3 +148,68 @@ const arr = [
   '09.43 0919 mon',
   '21.23. 0920. Tue',
 ];
+
+/**
+ * 能順利被處理的資料
+ */
+const formattedData = [];
+
+/**
+ * 有例外的資料
+ * 因為量級的關係，為了幾筆特例寫判斷式是不符合效益的，寧願做為例外整筆被輸出，後續再進行手動更改
+ */
+const exceptions = [];
+
+/**
+ * csv 檔的 header
+ */
+const csvHeader = ['日期', '具體時間', '備註', '星期幾'];
+
+/**
+ * 主流程
+ * 預計處理三件事：
+ * 1. 移除多餘的英文句號並加上時間的分隔符號
+ * 2. 判斷每筆資料是否符合資料預期的形態。
+ *  - 若是，歸類為能被處理的資料。
+ *  - 若否，歸類為例外，後續手動調整
+ * 3. 將正常處理以及例外的資料轉成 csv 檔
+ */
+const main = () => {
+  for (const str of arr) {
+    // step 1
+    const newStr = removeExtraPeriod(str);
+
+    /**
+     * 以空格作為分隔點，將字串切割成 array 方便後續處理
+     */
+    const splittedStrArr = newStr.split(' ');
+
+    // TODO: step 2
+
+    // TODO: step 3
+  }
+};
+
+/**
+ * 移除多餘的英文句號並加上時間的分隔符號
+ * @param {string} originalStr
+ * @returns {string}
+ */
+const removeExtraPeriod = (originalStr) => {
+  // 移除特定字串特定符號但保留前幾個的參考資料
+  // https://stackoverflow.com/questions/36502182/how-to-remove-all-but-the-first-occurences-of-a-character-from-a-string
+
+  /**
+   * 因為只有第一組時間需要一個分隔符號，所以我們採取反向的做法：亦即將所有英文的句號移除後，再把每串 string index = 1 的位置後面加上一個英文的冒號「:」。
+   */
+  let newStr = originalStr.replace(/\./g, '');
+
+  /**
+   * 時間加上冒號以後的字串
+   */
+  newStr = `${newStr.slice(0, 2)}:${newStr.slice(2)}`;
+
+  return newStr;
+};
+
+main();
