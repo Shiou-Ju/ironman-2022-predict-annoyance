@@ -184,10 +184,15 @@ const main = () => {
      */
     const splittedStrArr = newStr.split(' ');
 
-    // TODO: step 2
+    // 後續處理並歸類到正確的分類
+    processSplittedStr(splittedStrArr);
 
-    // TODO: step 3
+    // TODO: step 3 轉成 csv 檔
   }
+  console.log(`===exceptions=== count: ${exceptions.length}`);
+  console.log(exceptions);
+  console.log(`===successes=== count: ${formattedData.length}`);
+  console.log(formattedData);
 };
 
 /**
@@ -210,6 +215,79 @@ const removeExtraPeriod = (originalStr) => {
   newStr = `${newStr.slice(0, 2)}:${newStr.slice(2)}`;
 
   return newStr;
+};
+
+/**
+ * 處理並判斷是否分割後的字串陣列符合我們想要的格式
+ * 如果符合，依照格式 push 到 formattedData
+ * 如果不符合，將原始資料 push 到 exceptions
+ * @param {string[]} splittedStrArr
+ * @returns {void}
+ */
+const processSplittedStr = (splittedStrArr) => {
+  const cloneSplittedStrArr = [...splittedStrArr];
+  const temp = [];
+
+  // step 1 判斷小時分鐘
+  // time format ref
+  // https://stackoverflow.com/questions/7536755/regular-expression-for-matching-hhmm-time-format
+  const validTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+  const time = splittedStrArr[0];
+  const isValidTime = validTimeRegex.test(time);
+
+  if (isValidTime) {
+    temp.push(time);
+    splittedStrArr = splittedStrArr.filter((element) => element !== time);
+  } else {
+    exceptions.push(cloneSplittedStrArr);
+    return;
+  }
+
+  // step 2 判斷日期
+
+  // optional slash ref: https://stackoverflow.com/questions/8917209/regex-match-for-optional-trailing-slash
+  // match multiple digits ref: https://stackoverflow.com/questions/12011792/regular-expression-matching-a-3-or-4-digit-cvv-of-a-credit-card
+
+  const validDateRegex = /^[0-9]{0,2}\/?[0-9]{0,2}$/;
+  const [date] = splittedStrArr.filter((str) => validDateRegex.test(str));
+
+  if (!!date) {
+    temp.push(date);
+    splittedStrArr = splittedStrArr.filter((element) => element !== date);
+  } else {
+    exceptions.push(cloneSplittedStrArr);
+    return;
+  }
+
+  // step 3 判斷星期幾
+
+  // non-capturing group
+  //   https://stackoverflow.com/questions/3512471/what-is-a-non-capturing-group-in-regular-expressions
+  // regex for weekdays (case insensitive)
+  //   https://stackoverflow.com/questions/23962063/how-to-get-rid-of-all-weekday-words-from-a-string
+  const validCaseInsensitiveWeekDayRegex =
+    /(?:sat|sun|mon|tue|wed|thu|fri)\s?/gi;
+  const [weekday] = splittedStrArr.filter((str) =>
+    validCaseInsensitiveWeekDayRegex.test(str)
+  );
+
+  if (!!weekday) {
+    temp.push(weekday);
+    splittedStrArr = splittedStrArr.filter((element) => element !== weekday);
+  } else {
+    exceptions.push(cloneSplittedStrArr);
+    return;
+  }
+
+  // step 4 將剩餘的字串變成「備註」
+  if (splittedStrArr.length > 0) {
+    // 中間插入空格
+    const comment = splittedStrArr.join(' ');
+    temp.push(comment);
+  }
+
+  formattedData.push(temp);
 };
 
 main();
