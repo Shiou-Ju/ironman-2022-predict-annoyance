@@ -264,7 +264,9 @@ const processSplittedStr = (splittedStrArr) => {
   const [date] = splittedStrArr.filter((str) => validDateRegex.test(str));
 
   if (!!date) {
-    temp.push(date);
+    // 移除字串中的斜線
+    const formattedDate = date.replace('/', '');
+    temp.push(formattedDate);
     splittedStrArr = splittedStrArr.filter((element) => element !== date);
   } else {
     exceptions.push(cloneSplittedStrArr);
@@ -284,7 +286,9 @@ const processSplittedStr = (splittedStrArr) => {
   );
 
   if (!!weekday) {
-    temp.push(weekday);
+    // 統一成全部小寫
+    const formattedWeekday = weekday.toLowerCase();
+    temp.push(formattedWeekday);
     splittedStrArr = splittedStrArr.filter((element) => element !== weekday);
   } else {
     exceptions.push(cloneSplittedStrArr);
