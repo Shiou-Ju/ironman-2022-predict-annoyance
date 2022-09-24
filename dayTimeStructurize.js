@@ -1,3 +1,6 @@
+const { convertArrayToCSV } = require('convert-array-to-csv');
+const fs = require('fs');
+
 const arr = [
   '21.21 Mon',
   '20.50 Tue',
@@ -163,7 +166,7 @@ const exceptions = [];
 /**
  * csv 檔的 header
  */
-const csvHeader = ['日期', '具體時間', '備註', '星期幾'];
+const csvHeader = ['具體時間', '日期', '星期幾', '備註'];
 
 /**
  * 主流程
@@ -184,11 +187,19 @@ const main = () => {
      */
     const splittedStrArr = newStr.split(' ');
 
-    // 後續處理並歸類到正確的分類
+    // step 2 後續處理並歸類到正確的分類
     processSplittedStr(splittedStrArr);
-
-    // TODO: step 3 轉成 csv 檔
   }
+
+  // step 3 轉成 csv 檔
+
+  const csv = convertArrayToCSV(formattedData, {
+    header: csvHeader,
+    separator: ',',
+  });
+
+  fs.writeFileSync('annoyance_output.csv', csv);
+
   console.log(`===exceptions=== count: ${exceptions.length}`);
   console.log(exceptions);
   console.log(`===successes=== count: ${formattedData.length}`);
