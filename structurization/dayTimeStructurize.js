@@ -288,6 +288,7 @@ const processSplittedStr = (splittedStrArr) => {
   if (!!weekday) {
     // 統一成全部小寫
     const formattedWeekday = weekday.toLowerCase();
+    // TODO: 限定只有三位數，避免 thu 寫成 thur 仍會通過
     temp.push(formattedWeekday);
     splittedStrArr = splittedStrArr.filter((element) => element !== weekday);
   } else {
