@@ -1,12 +1,31 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 data_file_path = 'prediction/annoyance_output_manual_for_predict.csv'
+
+def convert_time_to_int(time_str: str):
+    time_split_arr = time_str.split(':')
+    hours_to_minutes = int(time_split_arr[0]) * 60
+    minutes = int(time_split_arr[1])
+    total_minutes = hours_to_minutes + minutes
+    return total_minutes
+
 
 df = pd.read_csv(data_file_path)
 group_by_weekdays = df.groupby('星期幾')
 
+df['time_in_minutes'] = df['具體時間'].apply(convert_time_to_int)
 
-print(group_by_weekdays.count())
+# visualization using plt
+# ref: https://stackoverflow.com/questions/21654635/scatter-plots-in-pandas-pyplot-how-to-plot-by-category
+fig, ax = plt.subplots()
+for name, group in group_by_weekdays:
+    ax.plot(group['星期幾'], group['time_in_minutes'],
+            marker='o', linestyle='', label=name)
+ax.legend()
+
+plt.show()
+
 
 # No records on Sunday and Saturday, so maybe weekdays can not be features.
 # But weekdays are important features cause their day-by-day work loading is based on each day's consumption.
