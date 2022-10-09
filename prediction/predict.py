@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 data_file_path = 'prediction/annoyance_output_manual_for_predict.csv'
 
 
@@ -17,6 +18,18 @@ def is_night_time(time_in_minutes: int):
     if (time_in_minutes > 900):
         return True
     return False
+
+
+def convert_int_to_time(mean: float):
+    rounded_number = round(mean)
+    hours = round(rounded_number/60)
+    mins = rounded_number - (hours * 60)
+    # if hours is rounded up
+    if (mins < 0):
+        mins = mins+60
+        hours = hours - 1
+    time_str = f"{hours}:{mins}"
+    return time_str
 
 
 df = pd.read_csv(data_file_path)
@@ -47,16 +60,23 @@ df_day = df.query('is_night_time == False')
 # Only night times should be grouped
 night_group_by_weekdays = df_night.groupby('星期幾')
 
+# Get mean value
 day_mean = df_day['time_in_minutes'].mean()
 night_mean = night_group_by_weekdays['time_in_minutes'].mean()
 
+# Convert number to time format
+day_mean_time_format = convert_int_to_time(day_mean)
+night_mean_time_format = night_mean.map(convert_int_to_time)
+
+
 print('\n\n\n')
 print("day time")
-print(day_mean)
+print(day_mean_time_format)
 print('\n\n\n')
 print("night time")
-print(night_mean)
+print(night_mean_time_format)
 print('\n\n\n')
+
 
 # ref
 # https://www.askpython.com/python-modules/pandas/conditionally-grouping-values
