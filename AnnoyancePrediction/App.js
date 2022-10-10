@@ -1,14 +1,8 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import type {Node} from 'react';
 import {
+  Alert,
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -18,16 +12,80 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const storeTimeRecord = async () => {
+  const now = new Date();
+  // Monday: 1
+  const weekday = now.getDay();
+  const preciseHour = now.getHours();
+  const preciseMin = now.getMinutes();
+  const year = now.getFullYear();
+  const month = now.getUTCMonth() + 1;
+  const formattedMonth = month < 10 ? `0${month}` : month;
+  const date = now.getDate();
+
+  // eg. 20221010
+  const key = `${year}${formattedMonth}${date}`;
+  const value = {
+    preciseTime: `${preciseHour}:${preciseMin}`,
+    weekday,
+  };
+
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+    Alert.alert('record stored');
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const getAllStoredRecords = async () => {
+  let keys = [];
+  try {
+    keys = await AsyncStorage.getAllKeys();
+  } catch (e) {
+    console.log(e);
+  }
+
+  const records = await Promise.all(
+    keys.map(async key => {
+      const value = await getData(key);
+      return {key, value};
+    }),
+  );
+
+  const message = JSON.stringify(records);
+  Alert.alert(message);
+};
+
+/**
+ * @param {string} date eg. 20221010
+ */
+const getData = async (date: string) => {
+  try {
+    const value = await AsyncStorage.getItem(date);
+    if (value !== null) {
+      // Alert.alert(value);
+      return value;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const clearAll = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (e) {
+    console.log(e);
+  }
+
+  Alert.alert('All data wiped');
+};
+
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
@@ -70,25 +128,26 @@ const App: () => Node = () => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
+          <Section title={'Annoyance Notification'} />
+          <Section title="記錄關門聲">
+            {/* TODO: how to make the button same size */}
+            {/* <Button title="點我" onPress={() => Alert.alert('關門聲已記錄')} /> */}
+            <Button title="點我" onPress={storeTimeRecord} />
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
+          <Section title="輸出檔案">
+            {/* TODO: how to export file */}
+            {/* <Button title="點我" onPress={() => Alert.alert('檔案已輸出')} /> */}
+            <Button title="點我" onPress={getAllStoredRecords} />
           </Section>
-          <Section title="Debug">
-            <DebugInstructions />
+          <Section title="清除所有儲存資料(開發用)">
+            {/* TODO: how to export file */}
+            {/* <Button title="點我" onPress={() => Alert.alert('檔案已輸出')} /> */}
+            <Button title="確定點我？" onPress={clearAll} />
           </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
