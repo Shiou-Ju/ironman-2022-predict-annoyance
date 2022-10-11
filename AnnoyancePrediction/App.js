@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
   Alert,
@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+
+import BackgroundTimer from 'react-native-background-timer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -114,6 +116,20 @@ const Section = ({children, title}): Node => {
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
+
+  // componentDidMount() {Alert.alert('sass') }
+
+  // use effect in functional component
+  // https://stackoverflow.com/questions/60132954/is-there-a-way-i-can-make-componentdidmount-work-in-react-native-file
+  useEffect(() => {
+    // Alert.alert('sadds');
+
+    BackgroundTimer.setTimeout(() => {
+      // this will be executed once after 10 seconds
+      // even when app is the the background
+      Alert.alert('test background！');
+    }, 3000);
+  });
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
