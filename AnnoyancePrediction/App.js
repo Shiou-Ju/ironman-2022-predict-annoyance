@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
   Button,
@@ -17,6 +17,8 @@ import {
   getAllStoredRecords,
   storeTimeRecord,
 } from './src/asyncStorage';
+
+import {checkAndroidBackgroundRestrictions} from './src/checkAndroidBackgroundRestrictions';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -46,6 +48,10 @@ const Section = ({children, title}): Node => {
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
+
+  useEffect(() => {
+    checkAndroidBackgroundRestrictions();
+  }, []);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,

@@ -22,7 +22,7 @@ export async function onDisplayNotification() {
 
 export async function onCreateTriggerNotification() {
   const date = new Date(Date.now());
-  date.setSeconds(date.getSeconds() + 3);
+  date.setSeconds(date.getSeconds() + 7);
 
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
@@ -38,7 +38,7 @@ export async function onCreateTriggerNotification() {
   await notifee.createTriggerNotification(
     {
       title: 'Test',
-      body: 'test body',
+      body: `test body ${date.toISOString()}`,
       android: {
         channelId,
         pressAction: {
