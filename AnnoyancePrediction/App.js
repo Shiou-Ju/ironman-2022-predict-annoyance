@@ -13,7 +13,6 @@ import {
   // PermissionsAndroid,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import BackgroundTimer from 'react-native-background-timer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
 
@@ -122,16 +121,13 @@ const Section = ({children, title}): Node => {
 };
 
 async function onDisplayNotification() {
-  // Request permissions (required for iOS)
   await notifee.requestPermission();
 
-  // Create a channel (required for Android)
   const channelId = await notifee.createChannel({
     id: 'default',
     name: 'Default Channel',
   });
 
-  // Display a notification
   await notifee.displayNotification({
     title: '通知測試',
     body: '測試',
@@ -144,20 +140,13 @@ async function onDisplayNotification() {
   });
 }
 
-// TODO: error message of official example
-('Error: Invalid notification (no valid small icon): Notification(channel=default shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x10 color=0x00000000 vis=PRIVATE)');
-
-// TODO: see if this works
 async function onCreateTriggerNotification() {
   const date = new Date(Date.now());
-  date.setHours(23);
-  date.setMinutes(37);
-  // date.setSeconds(date.getSeconds() + 3000);
+  date.setSeconds(date.getSeconds() + 3);
 
-  // Create a time-based trigger
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
-    timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+    timestamp: date.getTime(),
   };
 
   const channelId = await notifee.createChannel({
@@ -168,8 +157,8 @@ async function onCreateTriggerNotification() {
   // Create a trigger notification
   await notifee.createTriggerNotification(
     {
-      title: 'Meeting with Jane',
-      body: 'Today at 11:20am',
+      title: 'Test',
+      body: 'test body',
       android: {
         channelId,
         pressAction: {
