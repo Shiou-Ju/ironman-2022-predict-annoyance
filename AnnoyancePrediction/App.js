@@ -10,13 +10,20 @@ import {
   Text,
   useColorScheme,
   View,
+  // PermissionsAndroid,
 } from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
 import BackgroundTimer from 'react-native-background-timer';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
+
+/**
+ * 嘗試要用這篇處理 Android Studio 的寫法
+ * https://stackoverflow.com/questions/72388741/android-manifest-post-notifications-missing-import
+ */
+
+// RN android permissions
+// https://reactnative.dev/docs/permissionsandroid
 
 const storeTimeRecord = async () => {
   const now = new Date();
@@ -114,6 +121,66 @@ const Section = ({children, title}): Node => {
   );
 };
 
+async function onDisplayNotification() {
+  // Request permissions (required for iOS)
+  await notifee.requestPermission();
+
+  // Create a channel (required for Android)
+  const channelId = await notifee.createChannel({
+    id: 'default',
+    name: 'Default Channel',
+  });
+
+  // Display a notification
+  await notifee.displayNotification({
+    title: '通知測試',
+    body: '測試',
+    android: {
+      channelId,
+      pressAction: {
+        id: 'default',
+      },
+    },
+  });
+}
+
+// TODO: error message of official example
+('Error: Invalid notification (no valid small icon): Notification(channel=default shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x10 color=0x00000000 vis=PRIVATE)');
+
+// TODO: see if this works
+async function onCreateTriggerNotification() {
+  const date = new Date(Date.now());
+  date.setHours(23);
+  date.setMinutes(37);
+  // date.setSeconds(date.getSeconds() + 3000);
+
+  // Create a time-based trigger
+  const trigger: TimestampTrigger = {
+    type: TriggerType.TIMESTAMP,
+    timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+  };
+
+  const channelId = await notifee.createChannel({
+    id: 'default',
+    name: 'Default Channel',
+  });
+
+  // Create a trigger notification
+  await notifee.createTriggerNotification(
+    {
+      title: 'Meeting with Jane',
+      body: 'Today at 11:20am',
+      android: {
+        channelId,
+        pressAction: {
+          id: 'default',
+        },
+      },
+    },
+    trigger,
+  );
+}
+
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -123,12 +190,12 @@ const App: () => Node = () => {
   // https://stackoverflow.com/questions/60132954/is-there-a-way-i-can-make-componentdidmount-work-in-react-native-file
   useEffect(() => {
     // Alert.alert('sadds');
-
-    BackgroundTimer.setTimeout(() => {
-      // this will be executed once after 10 seconds
-      // even when app is the the background
-      Alert.alert('test background！');
-    }, 3000);
+    // requestCameraPermission();
+    // BackgroundTimer.setTimeout(() => {
+    //   // this will be executed once after 10 seconds
+    //   // even when app is the the background
+    //   Alert.alert('test background！');
+    // }, 3000);
   });
 
   const backgroundStyle = {
@@ -163,6 +230,12 @@ const App: () => Node = () => {
             {/* TODO: how to export file */}
             {/* <Button title="點我" onPress={() => Alert.alert('檔案已輸出')} /> */}
             <Button title="確定點我？" onPress={clearAll} />
+          </Section>
+          <Section>
+            <Button
+              title="Create Notification"
+              onPress={() => onCreateTriggerNotification()}
+            />
           </Section>
         </View>
       </ScrollView>
