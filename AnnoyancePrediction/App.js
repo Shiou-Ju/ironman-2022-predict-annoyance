@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 // local modules
-import {onCreateTriggerNotification} from './src/notification';
+import {setNotificationByWeekDay, sevenDaysInterval} from './src/notification';
 import {
   clearAll,
   getAllStoredRecords,
@@ -51,7 +51,13 @@ const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
+    process.env.TZ = 'Asia/Taipei';
+
     checkAndroidBackgroundRestrictions();
+    setNotificationByWeekDay();
+
+    // trigger every 7 days
+    // setInterval(setNotificationByWeekDay, sevenDaysInterval);
   }, []);
 
   const backgroundStyle = {
@@ -86,12 +92,6 @@ const App: () => Node = () => {
             {/* TODO: how to export file */}
             {/* <Button title="點我" onPress={() => Alert.alert('檔案已輸出')} /> */}
             <Button title="確定點我？" onPress={clearAll} />
-          </Section>
-          <Section>
-            <Button
-              title="Create Notification"
-              onPress={() => onCreateTriggerNotification()}
-            />
           </Section>
         </View>
       </ScrollView>
