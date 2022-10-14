@@ -1,7 +1,6 @@
 import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
 import moment from 'moment';
-import {Alert} from 'react-native';
-import {ISO_WEEKDAY_DICT, NIGHT_PREDICTION} from './constants';
+import {DAY_PREDICTION, ISO_WEEKDAY_DICT, NIGHT_PREDICTION} from './constants';
 
 export const daysToMilliseconds = days => {
   return days * 24 * 60 * 60 * 1000;
@@ -46,22 +45,10 @@ export async function onCreateTriggerNotification(
     timestamp: time,
   };
 
-  // /* eslint-disable */
-  // console.log(`============insdie=============`);
-  // console.log(time);
-  // console.log(new Date(time).getHours());
-  // console.log(new Date(time).getMinutes());
-  // console.log(Date.now());
-  // console.log(new Date().getHours());
-  // console.log(`=============================`);
-  // /* eslint-enable */
-
   const channelId = await notifee.createChannel({
     id: 'default',
     name: 'Default Channel',
   });
-
-  // const formattedTime = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
   // Create a trigger notification
   await notifee.createTriggerNotification(
@@ -100,7 +87,6 @@ export const onCreateTriggerNotificationByWeekday = async (
       ? Math.abs(weekdayDiff)
       : 7 - weekdayDiff;
 
-  // 如果今天的時間已經超過，那麼就不設定今天
   const [hours, mins] = time.split(':');
   // const hoursInMilliseconds = hoursToMilliseconds(hours);
   // const minsInMilliseconds = minsToMilliseconds(mins);
@@ -128,6 +114,7 @@ export const onCreateTriggerNotificationByWeekday = async (
     // // 10 mins before
     .subtract(10, 'minutes');
 
+  // 如果今天的時間已經超過，那麼就設定七天以後
   const absoluteTimeInMs =
     absoluteTime.valueOf() > Date.now()
       ? absoluteTime.valueOf()
@@ -135,21 +122,17 @@ export const onCreateTriggerNotificationByWeekday = async (
 
   const message = `樓下關門即將在 ${time} 發生`;
 
-  /* eslint-disable */
-  console.log(`=============================`);
-  console.log(absoluteTime);
-  console.log(absoluteTimeInMs);
-  console.log(`=============================`);
-  /* eslint-enable */
-
   onCreateTriggerNotification(absoluteTimeInMs, message);
 };
 
 export const setNotificationByWeekDay = () => {
   const nightPrediction = NIGHT_PREDICTION;
+  const dayPredcition = DAY_PREDICTION;
 
   for (const predict of nightPrediction) {
     const {weekday, time} = predict;
     onCreateTriggerNotificationByWeekday(time, weekday);
+
+    onCreateTriggerNotificationByWeekday(dayPredcition, weekday);
   }
 };
