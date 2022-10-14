@@ -1,3 +1,4 @@
+// node modules
 import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
@@ -11,13 +12,13 @@ import {
   View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+// local modules
 import {onCreateTriggerNotification} from './src/notification';
 import {
   clearAll,
   getAllStoredRecords,
   storeTimeRecord,
 } from './src/asyncStorage';
-
 import {checkAndroidBackgroundRestrictions} from './src/checkAndroidBackgroundRestrictions';
 
 const Section = ({children, title}): Node => {

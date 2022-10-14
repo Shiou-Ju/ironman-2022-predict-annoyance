@@ -43,7 +43,7 @@ export const getAllStoredRecords = async () => {
   );
 
   const message = JSON.stringify(records);
-  Alert.alert(message);
+  Alert.alert(`count: ${records.length}\n${message}`);
 };
 
 /**
