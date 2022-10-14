@@ -57,7 +57,7 @@ const App: () => Node = () => {
     setNotificationByWeekDay();
 
     // trigger every 7 days
-    // setInterval(setNotificationByWeekDay, sevenDaysInterval);
+    setInterval(setNotificationByWeekDay, sevenDaysInterval);
   }, []);
 
   const backgroundStyle = {
