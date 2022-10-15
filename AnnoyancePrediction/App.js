@@ -17,7 +17,9 @@ import {setNotificationByWeekDay, sevenDaysInterval} from './src/notification';
 import {
   clearAll,
   shareStoredRecords,
-  storeTimeRecord,
+  storeDayRecord,
+  storeNightRecord,
+  storeSimpleRecord,
 } from './src/asyncStorage';
 import {checkAndroidBackgroundRestrictions} from './src/checkAndroidBackgroundRestrictions';
 
@@ -78,19 +80,20 @@ const App: () => Node = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title={'Annoyance Notification'} />
-          <Section title="記錄關門聲">
+          <Section title="記錄🌚關門聲">
             {/* TODO: how to make the button same size */}
-            {/* <Button title="點我" onPress={() => Alert.alert('關門聲已記錄')} /> */}
-            <Button title="點我" onPress={storeTimeRecord} />
+            <Button title="點我" onPress={storeNightRecord} />
+          </Section>
+          <Section title="記錄🌝關門聲">
+            <Button title="點我" onPress={storeDayRecord} />
+          </Section>
+          <Section title="單純記錄關門聲">
+            <Button title="點我" onPress={storeSimpleRecord} />
           </Section>
           <Section title="輸出檔案">
-            {/* TODO: how to export file */}
-            {/* <Button title="點我" onPress={() => Alert.alert('檔案已輸出')} /> */}
             <Button title="點我" onPress={shareStoredRecords} />
           </Section>
           <Section title="清除所有儲存資料(開發用)">
-            {/* TODO: how to export file */}
-            {/* <Button title="點我" onPress={() => Alert.alert('檔案已輸出')} /> */}
             <Button title="確定點我？" onPress={clearAll} />
           </Section>
         </View>

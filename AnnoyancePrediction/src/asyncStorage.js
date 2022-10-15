@@ -1,7 +1,7 @@
 import {Alert, Share} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const storeTimeRecord = async () => {
+const storeTimeRecord = async isNight => {
   const now = new Date();
   // Monday: 1
   const weekday = now.getDay();
@@ -12,8 +12,14 @@ export const storeTimeRecord = async () => {
   const formattedMonth = month < 10 ? `0${month}` : month;
   const date = now.getDate();
 
-  // eg. 20221010
-  const key = `${year}${formattedMonth}${date}`;
+  // eg. 20221010-night
+  const key =
+    isNight === null
+      ? `${year}${formattedMonth}${date}`
+      : isNight === true
+      ? `${year}${formattedMonth}${date}-night`
+      : `${year}${formattedMonth}${date}-day`;
+
   const value = {
     preciseTime: `${preciseHour}:${preciseMin}`,
     weekday,
@@ -27,13 +33,24 @@ export const storeTimeRecord = async () => {
   }
 };
 
-export const getAllStoredRecords = async () => {
+export const storeNightRecord = storeTimeRecord.bind(null, true);
+export const storeDayRecord = storeTimeRecord.bind(null, false);
+export const storeSimpleRecord = storeTimeRecord.bind(null, null);
+
+const getAllKeys = async () => {
   let keys = [];
+
   try {
     keys = await AsyncStorage.getAllKeys();
   } catch (e) {
     console.log(e);
   }
+
+  return keys;
+};
+
+export const getAllStoredRecords = async () => {
+  const keys = await getAllKeys();
 
   const records = await Promise.all(
     keys.map(async key => {
@@ -44,7 +61,6 @@ export const getAllStoredRecords = async () => {
 
   const formattedRecords = JSON.stringify(records);
 
-  // Alert.alert(`count: ${records.length}\n${formattedRecords}`);
   return formattedRecords;
 };
 
@@ -55,7 +71,6 @@ export const getData = async (date: string) => {
   try {
     const value = await AsyncStorage.getItem(date);
     if (value !== null) {
-      // Alert.alert(value);
       return value;
     }
   } catch (e) {
