@@ -75,7 +75,6 @@ export const onCreateTriggerNotificationByWeekday = async (
 ) => {
   const paramISOWeekday: Number = ISO_WEEKDAY_DICT[weekday];
 
-  // const weekdayNow = moment().tz('Asia/Taipei').isoWeekday();
   const weekdayNow = moment().isoWeekday();
 
   const weekdayDiff = weekdayNow - paramISOWeekday;
@@ -88,29 +87,11 @@ export const onCreateTriggerNotificationByWeekday = async (
       : 7 - weekdayDiff;
 
   const [hours, mins] = time.split(':');
-  // const hoursInMilliseconds = hoursToMilliseconds(hours);
-  // const minsInMilliseconds = minsToMilliseconds(mins);
-  // 10 mins before
-  // const tenMinutesMs = minsToMilliseconds(10);
-
-  // const absoluteTime =
-  //   Date.now() +
-  //   daysToMilliseconds(daysDiff) +
-  //   hoursInMilliseconds +
-  //   minsInMilliseconds -
-  //   tenMinutesMs;
-
-  // const hoursLeft = 24 - moment().get('hour');
 
   const absoluteTime = moment()
     .add(daysDiff, 'days')
-    // UTC +8
-    // .subtract(1, 'days')
-    // .add(hoursLeft, 'hours')
-    // .add(hours, 'hours')
     .set('hour', hours)
     .set('minute', mins)
-    // .add(8, 'hours');
     // // 10 mins before
     .subtract(10, 'minutes');
 

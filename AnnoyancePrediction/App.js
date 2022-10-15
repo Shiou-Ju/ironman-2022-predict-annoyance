@@ -96,6 +96,10 @@ const App: () => Node = () => {
           <Section title="清除所有儲存資料(開發用)">
             <Button title="確定點我？" onPress={clearAll} />
           </Section>
+          {/* TODO: make a modal to add customized notification */}
+          {/* <Section title="modal">
+            <Button title="modal" onPress={modalOpen} />
+          </Section> */}
         </View>
       </ScrollView>
     </SafeAreaView>
