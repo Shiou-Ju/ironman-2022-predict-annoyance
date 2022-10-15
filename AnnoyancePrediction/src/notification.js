@@ -131,8 +131,10 @@ export const setNotificationByWeekDay = () => {
 
   for (const predict of nightPrediction) {
     const {weekday, time} = predict;
+    // night notification
     onCreateTriggerNotificationByWeekday(time, weekday);
 
+    // morning notification
     onCreateTriggerNotificationByWeekday(dayPredcition, weekday);
   }
 };

@@ -1,4 +1,4 @@
-import {Alert} from 'react-native';
+import {Alert, Share} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const storeTimeRecord = async () => {
@@ -42,8 +42,10 @@ export const getAllStoredRecords = async () => {
     }),
   );
 
-  const message = JSON.stringify(records);
-  Alert.alert(`count: ${records.length}\n${message}`);
+  const formattedRecords = JSON.stringify(records);
+
+  // Alert.alert(`count: ${records.length}\n${formattedRecords}`);
+  return formattedRecords;
 };
 
 /**
@@ -69,4 +71,17 @@ export const clearAll = async () => {
   }
 
   Alert.alert('All data wiped');
+};
+
+export const shareStoredRecords = async (customMessage: String) => {
+  const message = await getAllStoredRecords();
+
+  try {
+    await Share.share({
+      message: message,
+      url: message,
+    });
+  } catch (error) {
+    console.error(error.message);
+  }
 };

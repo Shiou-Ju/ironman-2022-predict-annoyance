@@ -16,7 +16,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {setNotificationByWeekDay, sevenDaysInterval} from './src/notification';
 import {
   clearAll,
-  getAllStoredRecords,
+  shareStoredRecords,
   storeTimeRecord,
 } from './src/asyncStorage';
 import {checkAndroidBackgroundRestrictions} from './src/checkAndroidBackgroundRestrictions';
@@ -86,7 +86,7 @@ const App: () => Node = () => {
           <Section title="輸出檔案">
             {/* TODO: how to export file */}
             {/* <Button title="點我" onPress={() => Alert.alert('檔案已輸出')} /> */}
-            <Button title="點我" onPress={getAllStoredRecords} />
+            <Button title="點我" onPress={shareStoredRecords} />
           </Section>
           <Section title="清除所有儲存資料(開發用)">
             {/* TODO: how to export file */}
