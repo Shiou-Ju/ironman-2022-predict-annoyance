@@ -29,7 +29,6 @@ export const NIGHT_PREDICTION = [
   },
 ];
 
-// TODO: implement day time notification
 export const DAY_PREDICTION = '11:45';
 
 export const ISO_WEEKDAY_DICT = {

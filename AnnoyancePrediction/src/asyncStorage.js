@@ -78,7 +78,7 @@ export const getData = async (date: string) => {
   }
 };
 
-export const clearAll = async () => {
+const clearAll = async () => {
   try {
     await AsyncStorage.clear();
   } catch (e) {
@@ -99,4 +99,14 @@ export const shareStoredRecords = async (customMessage: String) => {
   } catch (error) {
     console.error(error.message);
   }
+};
+
+export const confirmClearAll = async () => {
+  Alert.alert('刪除資料', '確定是否要刪除嗎？', [
+    {
+      text: '取消',
+      style: 'cancel',
+    },
+    {text: '確認刪除！', onPress: clearAll, style: 'destructive'},
+  ]);
 };

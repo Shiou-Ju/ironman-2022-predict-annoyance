@@ -15,7 +15,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 // local modules
 import {setNotificationByWeekDay, sevenDaysInterval} from './src/notification';
 import {
-  clearAll,
+  confirmClearAll,
   shareStoredRecords,
   storeDayRecord,
   storeNightRecord,
@@ -93,8 +93,8 @@ const App: () => Node = () => {
           <Section title="輸出檔案">
             <Button title="點我" onPress={shareStoredRecords} />
           </Section>
-          <Section title="清除所有儲存資料(開發用)">
-            <Button title="確定點我？" onPress={clearAll} />
+          <Section title="清除所有儲存資料">
+            <Button title="考慮一下吧" onPress={confirmClearAll} />
           </Section>
           {/* TODO: make a modal to add customized notification */}
           {/* <Section title="modal">
