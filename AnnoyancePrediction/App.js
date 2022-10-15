@@ -2,16 +2,15 @@
 import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
-  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Button, lightColors, darkColors, Text} from '@rneui/themed';
+import {Divider} from '@rneui/base';
 // local modules
 import {setNotificationByWeekDay, sevenDaysInterval} from './src/notification';
 import {
@@ -28,10 +27,11 @@ const Section = ({children, title}): Node => {
   return (
     <View style={styles.sectionContainer}>
       <Text
+        h4
         style={[
           styles.sectionTitle,
           {
-            color: isDarkMode ? Colors.white : Colors.black,
+            color: isDarkMode ? lightColors.white : darkColors.white,
           },
         ]}>
         {title}
@@ -40,7 +40,7 @@ const Section = ({children, title}): Node => {
         style={[
           styles.sectionDescription,
           {
-            color: isDarkMode ? Colors.light : Colors.dark,
+            color: isDarkMode ? lightColors.white : darkColors.white,
           },
         ]}>
         {children}
@@ -63,39 +63,77 @@ const App: () => Node = () => {
   }, []);
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? darkColors.white : lightColors.white,
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        style={backgroundStyle}
       />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title={'Annoyance Notification'} />
+        <View style={backgroundStyle}>
+          {/* <Section title={'Annoyance Notification'}> */}
+          <Text
+            h3
+            style={[
+              // TODO:
+              // eslint-disable-next-line react-native/no-inline-styles
+              {
+                marginTop: 20,
+                marginLeft: 25,
+                marginBottom: 10,
+                color: isDarkMode ? lightColors.white : darkColors.white,
+              },
+            ]}>
+            Annoyance Notification
+          </Text>
+          {/* </Section> */}
+          <Divider
+            // TODO:
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{width: '80%', marginLeft: 20}}
+            color={isDarkMode ? lightColors.white : darkColors.white}
+            insetType="left"
+            subHeaderStyle={{}}
+            width={1}
+            orientation="horizontal"
+          />
           <Section title="記錄🌚關門聲">
             {/* TODO: how to make the button same size */}
-            <Button title="點我" onPress={storeNightRecord} />
+            <Button size="lg" onPress={storeNightRecord}>
+              <Text h4>點我</Text>
+            </Button>
           </Section>
           <Section title="記錄🌝關門聲">
-            <Button title="點我" onPress={storeDayRecord} />
+            <Button size="lg" onPress={storeDayRecord}>
+              <Text h4>點我</Text>
+            </Button>
           </Section>
           <Section title="單純記錄關門聲">
-            <Button title="點我" onPress={storeSimpleRecord} />
+            <Button size="lg" onPress={storeSimpleRecord}>
+              <Text h4>點我</Text>
+            </Button>
           </Section>
           <Section title="輸出檔案">
-            <Button title="點我" onPress={shareStoredRecords} />
+            <Button size="lg" onPress={shareStoredRecords}>
+              <Text h4>點我</Text>
+            </Button>
           </Section>
           <Section title="清除所有儲存資料">
-            <Button title="考慮一下吧" onPress={confirmClearAll} />
+            <Button size="sm" color="warning" onPress={confirmClearAll}>
+              <Text h4>考慮一下吧</Text>
+            </Button>
           </Section>
+          {/* TODO: temp for not showing a bar down there */}
+          <Section />
+          {/* TODO: temp for not showing a bar down there */}
+          <Section />
+          {/* TODO: temp for not showing a bar down there */}
+          <Section />
           {/* TODO: make a modal to add customized notification */}
           {/* <Section title="modal">
             <Button title="modal" onPress={modalOpen} />
