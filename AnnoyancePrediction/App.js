@@ -8,6 +8,7 @@ import {
   StyleSheet,
   useColorScheme,
   View,
+  Dimensions,
 } from 'react-native';
 import {Button, lightColors, darkColors, Text} from '@rneui/themed';
 import {Divider} from '@rneui/base';
@@ -75,7 +76,12 @@ const App: () => Node = () => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <View style={backgroundStyle}>
+        <View
+          style={{
+            backgroundColor: backgroundStyle.backgroundColor,
+            // make window height 100vh
+            height: Dimensions.get('window').height,
+          }}>
           {/* <Section title={'Annoyance Notification'}> */}
           <Text
             h3
@@ -128,12 +134,6 @@ const App: () => Node = () => {
               <Text h4>考慮一下吧</Text>
             </Button>
           </Section>
-          {/* TODO: temp for not showing a bar down there */}
-          <Section />
-          {/* TODO: temp for not showing a bar down there */}
-          <Section />
-          {/* TODO: temp for not showing a bar down there */}
-          <Section />
           {/* TODO: make a modal to add customized notification */}
           {/* <Section title="modal">
             <Button title="modal" onPress={modalOpen} />
