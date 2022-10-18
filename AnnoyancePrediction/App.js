@@ -56,7 +56,14 @@ const App: () => Node = () => {
   useEffect(() => {
     process.env.TZ = 'Asia/Taipei';
 
+    // TODO: on my device, warnings will show up even you already canceled optimization fort this app.
+    // and the app still killed after a certain while
     checkAndroidBackgroundRestrictions();
+
+    // TODO: maybe duplication of notification is orginated from here
+    // new missions are set even the old ones exist
+    // see: node_modules/@notifee/react-native/dist/types/Module.d.ts
+    // getTriggerNotifications()
     setNotificationByWeekDay();
 
     // trigger every 7 days
@@ -109,7 +116,6 @@ const App: () => Node = () => {
             orientation="horizontal"
           />
           <Section title="記錄🌚關門聲">
-            {/* TODO: how to make the button same size */}
             <Button size="lg" onPress={storeNightRecord}>
               <Text h4>點我</Text>
             </Button>
