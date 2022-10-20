@@ -1,5 +1,8 @@
 // node modules
-import React, {useEffect} from 'react';
+import React, {
+  useEffect,
+  // useState
+} from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -22,6 +25,8 @@ import {
   storeSimpleRecord,
 } from './src/asyncStorage';
 import {checkAndroidBackgroundRestrictions} from './src/checkAndroidBackgroundRestrictions';
+// TODO: remove if not used
+// import notifee from '@notifee/react-native';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -104,6 +109,8 @@ const App: () => Node = () => {
             ]}>
             Annoyance Notification
           </Text>
+          {/* TODO: remove if not used */}
+          {/* <Test /> */}
           {/* </Section> */}
           <Divider
             // TODO:
@@ -149,6 +156,35 @@ const App: () => Node = () => {
     </SafeAreaView>
   );
 };
+
+// TODO: remove after the issue is solved
+// const Test = () => {
+//   const [data, setData] = useState(null);
+
+//   const show = async () => {
+//     const managerInfo = await notifee.getPowerManagerInfo();
+
+//     const optimization = await notifee.isBatteryOptimizationEnabled();
+
+//     const result =
+//       'managerInfo: ' +
+//       JSON.stringify(managerInfo) +
+//       '\n\n' +
+//       'optimization: ' +
+//       JSON.stringify(optimization);
+
+//     setData(result);
+//   };
+
+//   show();
+
+//   return (
+//     // eslint-disable-next-line react-native/no-inline-styles
+//     <Text h4 style={{backgroundColor: 'white'}}>
+//       {data}
+//     </Text>
+//   );
+// };
 
 const styles = StyleSheet.create({
   sectionContainer: {
