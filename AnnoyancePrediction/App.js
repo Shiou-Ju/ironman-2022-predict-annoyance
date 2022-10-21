@@ -16,7 +16,7 @@ import {
 import {Button, lightColors, darkColors, Text} from '@rneui/themed';
 import {Divider} from '@rneui/base';
 // local modules
-import {setNotificationByWeekDay, sevenDaysInterval} from './src/notification';
+import {setNotificationByWeekDay} from './src/notification';
 import {
   confirmClearAll,
   shareStoredRecords,
@@ -61,7 +61,7 @@ const App: () => Node = () => {
   useEffect(() => {
     process.env.TZ = 'Asia/Taipei';
 
-    // TODO: on my device, warnings will show up even you already canceled optimization fort this app.
+    // TODO: on my device, warnings will show up even you already canceled optimization for this app.
     // and the app still killed after a certain while
     checkAndroidBackgroundRestrictions();
 
@@ -70,9 +70,6 @@ const App: () => Node = () => {
     // see: node_modules/@notifee/react-native/dist/types/Module.d.ts
     // getTriggerNotifications()
     setNotificationByWeekDay();
-
-    // trigger every 7 days
-    setInterval(setNotificationByWeekDay, sevenDaysInterval);
   }, []);
 
   const backgroundStyle = {

@@ -1,4 +1,8 @@
-import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
+import notifee, {
+  RepeatFrequency,
+  TimestampTrigger,
+  TriggerType,
+} from '@notifee/react-native';
 import moment from 'moment';
 import {DAY_PREDICTION, ISO_WEEKDAY_DICT, NIGHT_PREDICTION} from './constants';
 
@@ -39,10 +43,13 @@ export async function onDisplayNotification() {
 export async function onCreateTriggerNotification(
   time: String,
   message: String,
+  id: String | null,
 ) {
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
     timestamp: time,
+    // TODO: check if this works
+    repeatFrequency: RepeatFrequency.WEEKLY,
   };
 
   const channelId = await notifee.createChannel({
@@ -53,8 +60,9 @@ export async function onCreateTriggerNotification(
   // Create a trigger notification
   await notifee.createTriggerNotification(
     {
+      id: id || new Date().toISOString(),
       title: '關門通知',
-      body: message ? message : '樓下關門即將在 10 分鐘內發生',
+      body: message || '樓下關門即將在 10 分鐘內發生',
       android: {
         channelId,
         pressAction: {
@@ -72,6 +80,7 @@ export async function onCreateTriggerNotification(
 export const onCreateTriggerNotificationByWeekday = async (
   time: String,
   weekday: String,
+  isNight: Boolean,
 ) => {
   const paramISOWeekday: Number = ISO_WEEKDAY_DICT[weekday];
 
@@ -103,7 +112,18 @@ export const onCreateTriggerNotificationByWeekday = async (
 
   const message = `樓下關門即將在 ${time} 發生`;
 
-  onCreateTriggerNotification(absoluteTimeInMs, message);
+  const customizedNotificationId =
+    isNight === undefined
+      ? null
+      : isNight
+      ? `${weekday}-night`
+      : `${weekday}-day`;
+
+  onCreateTriggerNotification(
+    absoluteTimeInMs,
+    message,
+    customizedNotificationId,
+  );
 };
 
 export const setNotificationByWeekDay = () => {
@@ -113,9 +133,9 @@ export const setNotificationByWeekDay = () => {
   for (const predict of nightPrediction) {
     const {weekday, time} = predict;
     // night notification
-    onCreateTriggerNotificationByWeekday(time, weekday);
+    onCreateTriggerNotificationByWeekday(time, weekday, true);
 
     // morning notification
-    onCreateTriggerNotificationByWeekday(dayPredcition, weekday);
+    onCreateTriggerNotificationByWeekday(dayPredcition, weekday, false);
   }
 };
